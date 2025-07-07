@@ -3,162 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Image Upscaler</title>
+  <title>Hinata API's</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Particles Background -->
-  <div id="particles-js"></div>
-  
-  <!-- Main Content -->
-  <div class="container">
-    <div class="logo-container">
-      <div class="logo-circle">
-        <img src="https://cdn-icons-png.flaticon.com/512/6393/6393659.png" alt="Upscaler Logo" class="logo">
+  <div class="landing-container">
+    <header>
+      <h1>Hinata API's</h1>
+      <h2>Professional API Services</h2>
+    </header>
+    
+    <div class="hero">
+      <p>Access powerful API endpoints for your projects without the hassle of authentication. Build amazing applications with our reliable and easy-to-use API services. Perfect for developers of all skill levels!</p>
+      
+      <div class="divider"></div>
+      
+      <a href="dashboard.html" class="dashboard-btn">
+        Launch Dashboard →
+      </a>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-value">7</div>
+        <div class="stat-label">Endpoints 💬</div>
       </div>
-      <h1>AI IMAGE <span>UPSCALER</span></h1>
-    </div>
-
-    <div class="upload-area" id="dropZone">
-      <div class="icon">+</div>
-      <p>Drag & Drop your image here</p>
-      <p class="small">or click to browse</p>
-      <input type="file" id="fileInput" accept="image/*">
-    </div>
-
-    <div class="controls">
-      <div class="scale-selector">
-        <label>Upscale Factor:</label>
-        <div class="scale-options">
-          <button data-scale="2">2x</button>
-          <button data-scale="3">3x</button>
-          <button data-scale="4" class="active">4x</button>
-          <button data-scale="5">5x</button>
-          <button data-scale="6">6x</button>
-        </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">better</div>
+        <div class="stat-label">Uptime ✓</div>
       </div>
-
-      <button id="processBtn" class="btn">UPSCALE IMAGE</button>
-    </div>
-
-    <div class="result hidden" id="resultContainer">
-      <div class="comparison">
-        <div class="image-box">
-          <h3>Original</h3>
-          <img id="originalImg">
-        </div>
-        <div class="image-box">
-          <h3>Upscaled <span id="scaleLabel">4x</span></h3>
-          <img id="upscaledImg">
-        </div>
+      
+      <div class="stat-card">
+        <div class="stat-value">24/7</div>
+        <div class="stat-label">Support 💬</div>
       </div>
-      <a id="downloadBtn" class="btn">DOWNLOAD ENHANCED IMAGE</a>
     </div>
-
-    <a href="dashboard.html" class="dashboard-link">
-      <button class="dashboard-btn">API DASHBOARD →</button>
-    </a>
   </div>
-
-  <script src="particles.js"></script>
-  <script>
-    // Initialize particles
-    particlesJS("particles-js", {
-      particles: {
-        number: { value: 80, density: { enable: true, value_area: 800 } },
-        color: { value: ["#ff7eb9", "#7afcff", "#feff9c"] },
-        shape: { type: "circle" },
-        size: { value: 3, random: true },
-        line_linked: { enable: false },
-        move: {
-          enable: true,
-          speed: 1,
-          direction: "bottom",
-          straight: false,
-          out_mode: "out"
-        }
-      },
-      interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "repulse" } } }
-    });
-
-    // App functionality
-    let selectedScale = 4;
-    let originalImage = null;
-    
-    document.querySelectorAll('.scale-options button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelector('.scale-options .active').classList.remove('active');
-        btn.classList.add('active');
-        selectedScale = parseInt(btn.dataset.scale);
-        document.getElementById('scaleLabel').textContent = `${selectedScale}x`;
-      });
-    });
-
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    
-    dropZone.addEventListener('click', () => fileInput.click());
-    
-    fileInput.addEventListener('change', e => {
-      if(e.target.files.length) handleFile(e.target.files[0]);
-    });
-
-    dropZone.addEventListener('dragover', e => {
-      e.preventDefault();
-      dropZone.classList.add('dragging');
-    });
-
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('dragging');
-    });
-
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropZone.classList.remove('dragging');
-      if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-    });
-
-    function handleFile(file) {
-      if(!file.type.match('image.*')) return alert('Please select an image file');
-      
-      const reader = new FileReader();
-      reader.onload = e => {
-        originalImage = e.target.result;
-        document.getElementById('originalImg').src = originalImage;
-        document.getElementById('resultContainer').classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    document.getElementById('processBtn').addEventListener('click', async () => {
-      if(!originalImage) return alert('Please select an image first');
-      
-      const btn = document.getElementById('processBtn');
-      btn.textContent = 'Processing...';
-      btn.disabled = true;
-      
-      try {
-        const response = await fetch('/api/upscale', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageUrl: originalImage, scale: selectedScale })
-        });
-        
-        const result = await response.json();
-        
-        if(result.error) throw new Error(result.error);
-        
-        document.getElementById('upscaledImg').src = result.image;
-        document.getElementById('downloadBtn').href = result.image;
-        document.getElementById('downloadBtn').download = `upscaled-${selectedScale}x.png`;
-        
-      } catch (error) {
-        alert(`Error: ${error.message}`);
-      } finally {
-        btn.textContent = 'UPSCALE IMAGE';
-        btn.disabled = false;
-      }
-    });
-  </script>
 </body>
-  </html>
+</html>
