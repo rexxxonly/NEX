@@ -4,68 +4,98 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>API Documentation</title>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="particles-js"></div>
+  
   <div class="api-detail-container">
-    <header class="dashboard-header">
-      <div>
-        <h1 id="apiTitle">API Documentation</h1>
-        <p class="subtitle" id="apiDescription">Detailed API information</p>
+    <header>
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        <h1>Hinata API Documentation</h1>
       </div>
-      <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+      <a href="dashboard.html" class="back-button">← Back to Dashboard</a>
     </header>
     
-    <div class="api-info">
-      <div class="api-meta">
-        <div class="meta-card">
-          <span>Method</span>
-          <strong id="apiMethod">GET</strong>
-        </div>
-        <div class="meta-card">
-          <span>Category</span>
-          <strong id="apiCategory">AI</strong>
-        </div>
-        <div class="meta-card">
-          <span>Path</span>
-          <strong id="apiPath">/api/endpoint</strong>
-        </div>
-      </div>
-      
-      <div class="api-docs">
-        <h2>Parameters</h2>
-        <div id="parametersList" class="params-table">
-          <!-- Filled by JavaScript -->
-        </div>
-        
-        <h2>Example Request</h2>
-        <div class="code-block">
-          <pre><code id="exampleRequest">fetch('/api/endpoint?param=value')</code></pre>
-        </div>
-        
-        <h2>Example Response</h2>
-        <div class="code-block">
-          <pre><code id="exampleResponse">{
-  "data": "example"
-}</code></pre>
-        </div>
-        
-        <h2>Try It</h2>
-        <div class="try-it">
-          <div class="input-group">
-            <label for="paramInput">Enter Parameter:</label>
-            <input type="text" id="paramInput" placeholder="value">
-          </div>
-          <button id="tryBtn" class="btn">Run API</button>
-          <div class="result-area">
-            <h3>API Response:</h3>
-            <pre id="apiResult"></pre>
-          </div>
-        </div>
-      </div>
+    <div class="api-header">
+      <div class="api-title" id="apiTitle">API Title</div>
+      <div class="api-method" id="apiMethod">GET</div>
+      <div class="api-path" id="apiPath">/api/path</div>
     </div>
     
-    <script src="script.js"></script>
+    <div class="api-description" id="apiDescription">
+      API description will appear here.
+    </div>
+    
+    <div class="section-title">Parameters</div>
+    <div class="parameters" id="parametersContainer">
+      <!-- Parameters will be populated by JavaScript -->
+    </div>
+    
+    <div class="section-title">Example Request</div>
+    <div class="code-block" id="exampleRequest">
+      // Example request will appear here
+    </div>
+    
+    <div class="section-title">Example Response</div>
+    <div class="code-block" id="exampleResponse">
+      // Example response will appear here
+    </div>
   </div>
+  
+  <script>
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 40, density: { enable: true, value_area: 800 } },
+        color: { value: ["#ff7eb9", "#7afcff", "#feff9c"] },
+        shape: { type: "circle" },
+        size: { value: 3, random: true },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "bottom",
+          straight: false,
+          out_mode: "out"
+        }
+      }
+    });
+    
+    // Fetch API details based on URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const apiPath = urlParams.get('path');
+    
+    if (apiPath) {
+      fetch(`/api/_meta?path=${encodeURIComponent(apiPath)}`)
+        .then(res => res.json())
+        .then(api => {
+          document.getElementById('apiTitle').textContent = api.name;
+          document.getElementById('apiMethod').textContent = api.method;
+          document.getElementById('apiPath').textContent = api.path;
+          document.getElementById('apiDescription').textContent = api.description;
+          
+          // Render parameters
+          if (api.parameters) {
+            const parametersContainer = document.getElementById('parametersContainer');
+            parametersContainer.innerHTML = api.parameters.map(param => `
+              <div class="parameter">
+                <div class="param-name">${param.name}</div>
+                <div class="param-type">${param.type}</div>
+                <div class="param-required">${param.required ? 'Required' : 'Optional'}</div>
+                <div class="param-description">${param.description}</div>
+              </div>
+            `).join('');
+          }
+          
+          // Render examples
+          document.getElementById('exampleRequest').textContent = 
+            api.exampleRequest || 'No example available';
+            
+          document.getElementById('exampleResponse').textContent = 
+            api.exampleResponse ? JSON.stringify(api.exampleResponse, null, 2) : 'No example available';
+        });
+    }
+  </script>
 </body>
 </html>
