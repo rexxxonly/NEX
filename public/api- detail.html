@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Documentation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="api-detail-container">
+    <header class="dashboard-header">
+      <div>
+        <h1 id="apiTitle">API Documentation</h1>
+        <p class="subtitle" id="apiDescription">Detailed API information</p>
+      </div>
+      <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+    </header>
+    
+    <div class="api-info">
+      <div class="api-meta">
+        <div class="meta-card">
+          <span>Method</span>
+          <strong id="apiMethod">GET</strong>
+        </div>
+        <div class="meta-card">
+          <span>Category</span>
+          <strong id="apiCategory">AI</strong>
+        </div>
+        <div class="meta-card">
+          <span>Path</span>
+          <strong id="apiPath">/api/endpoint</strong>
+        </div>
+      </div>
+      
+      <div class="api-docs">
+        <h2>Parameters</h2>
+        <div id="parametersList" class="params-table">
+          <!-- Filled by JavaScript -->
+        </div>
+        
+        <h2>Example Request</h2>
+        <div class="code-block">
+          <pre><code id="exampleRequest">fetch('/api/endpoint?param=value')</code></pre>
+        </div>
+        
+        <h2>Example Response</h2>
+        <div class="code-block">
+          <pre><code id="exampleResponse">{
+  "data": "example"
+}</code></pre>
+        </div>
+        
+        <h2>Try It</h2>
+        <div class="try-it">
+          <div class="input-group">
+            <label for="paramInput">Enter Parameter:</label>
+            <input type="text" id="paramInput" placeholder="value">
+          </div>
+          <button id="tryBtn" class="btn">Run API</button>
+          <div class="result-area">
+            <h3>API Response:</h3>
+            <pre id="apiResult"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="script.js"></script>
+  </div>
+</body>
+</html>
