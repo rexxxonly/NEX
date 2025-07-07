@@ -3,42 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hinata API's</title>
+  <title>Hinata API</title>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="particles-js"></div>
+  
   <div class="landing-container">
     <header>
-      <h1>Hinata API's</h1>
-      <h2>Professional API Services</h2>
+      <div class="logo">
+        <div class="logo-icon">H</div>
+        <h1>Hinata API</h1>
+      </div>
     </header>
     
     <div class="hero">
+      <h2>Professional API Services</h2>
       <p>Access powerful API endpoints for your projects without the hassle of authentication. Build amazing applications with our reliable and easy-to-use API services. Perfect for developers of all skill levels!</p>
       
-      <div class="divider"></div>
-      
-      <a href="dashboard.html" class="dashboard-btn">
-        Launch Dashboard →
-      </a>
+      <a href="dashboard.html" class="cta-button">Launch Dashboard →</a>
     </div>
     
     <div class="stats">
       <div class="stat-card">
-        <div class="stat-value">7</div>
-        <div class="stat-label">Endpoints 💬</div>
+        <div class="stat-value" id="totalEndpoints">7</div>
+        <div class="stat-label">Endpoints</div>
       </div>
       
       <div class="stat-card">
-        <div class="stat-value">better</div>
-        <div class="stat-label">Uptime ✓</div>
+        <div class="stat-value">99.9%</div>
+        <div class="stat-label">Uptime</div>
       </div>
       
       <div class="stat-card">
         <div class="stat-value">24/7</div>
-        <div class="stat-label">Support 💬</div>
+        <div class="stat-label">Support</div>
       </div>
     </div>
   </div>
+  
+  <script>
+    // Particles configuration
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: ["#ff7eb9", "#7afcff", "#feff9c"] },
+        shape: { type: "circle" },
+        size: { value: 3, random: true },
+        line_linked: { enable: false },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "bottom",
+          straight: false,
+          out_mode: "out"
+        }
+      },
+      interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "repulse" } } }
+    });
+    
+    // Fetch total endpoints count
+    fetch('/api/_meta')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('totalEndpoints').textContent = data.total;
+      });
+  </script>
 </body>
-</html>
+          </html>
